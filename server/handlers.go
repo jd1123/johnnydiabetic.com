@@ -11,6 +11,10 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	//w.Write([]byte("This is not working at all"))
 }
 
+func AboutHandler(w http.ResponseWriter, r *http.Request) {
+	helpers.RunTemplate(w, helpers.Template("about.html"), helpers.Template("base.html"), nil)
+}
+
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
