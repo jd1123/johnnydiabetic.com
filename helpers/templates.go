@@ -13,6 +13,8 @@ func Template(name string) string {
 }
 
 func RunTemplate(w http.ResponseWriter, templateName, baseTemplateName string, data interface{}) {
-	tmpl := template.Must(template.New(templateName).ParseFiles(baseTemplateName, templateName))
+	tp := Template(templateName)
+	bstp := Template(baseTemplateName)
+	tmpl := template.Must(template.New(tp).ParseFiles(bstp, tp))
 	tmpl.ExecuteTemplate(w, "base", data)
 }
