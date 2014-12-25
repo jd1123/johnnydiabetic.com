@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"log"
 	"net/http"
 	"path"
 	"text/template"
@@ -18,6 +17,6 @@ func RunTemplate(w http.ResponseWriter, templateName, headerTemplateName, footer
 	bstp := Template(headerTemplateName)
 	fttp := Template(footerTemplateName)
 	tmpl := template.Must(template.ParseFiles(tp, bstp, fttp))
-	log.Println("Data in RunTemplate", data)
+	//	log.Println("RunTemplate() called on", tp, "with", bstp, "and", fttp, "with data", data)
 	tmpl.Execute(w, data)
 }

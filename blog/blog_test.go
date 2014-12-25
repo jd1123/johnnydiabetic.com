@@ -3,6 +3,6 @@ package blog
 import "testing"
 
 func TestBlogPostObject(t *testing.T) {
-	b := NewBlogPost("First Post!", "Merry Christmas Eve! I'm going to work :(")
-	b.Print()
+	b := NewBlogPost("This is a post", "Hello world!")
+	AddPost(b)
 }
