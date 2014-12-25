@@ -23,6 +23,9 @@ func RegisterHandlers() {
 	// Register Apps here
 	blog.RegisterHandlers(r)
 
+	// 404 Handler
+	r.NotFoundHandler = http.HandlerFunc(notFound)
+
 	// Static files
 	http.HandleFunc("/static/", StaticHandler)
 }

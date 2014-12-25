@@ -22,14 +22,24 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
+// Implement 404 logic here
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	helpers.RunTemplate(w, "404.html", "header.html", "footer.html", nil)
+}
+
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {
 	f, err := os.Open("static/robots.txt")
 	if err != nil {
 		log.Printf("IO Error")
+		w.Write([]byte("IO Error!"))
 	} else {
 		r, err := ioutil.ReadAll(f)
 		if err != nil {
+			log.Printf("IO Error")
+			w.Write([]byte("IO Error!"))
+		} else {
+			w.Write(r)
 		}
-		w.Write(r)
 	}
 }
