@@ -10,12 +10,12 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	helpers.RunTemplate(w, "index.html", "base.html", nil)
+	helpers.RunTemplate(w, "index.html", "header.html", "footer.html", nil)
 	//w.Write([]byte("This is not working at all"))
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	helpers.RunTemplate(w, "about.html", "base.html", nil)
+	helpers.RunTemplate(w, "about.html", "header.html", "footer.html", nil)
 }
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {

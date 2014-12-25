@@ -1,0 +1,16 @@
+{{ template "header"}}
+<div class="jumbotron">
+	<center>
+		<h2>Welcome to my blog</h2>
+	</center>
+	Posts:
+	<div class = "container">
+		{{range .Posts}}
+		{{.Title}} created at {{.DateCreated}}<br/>
+		{{.Content}}</br>
+		{{end}}
+	</div>
+
+
+</div>
+{{template "footer"}}

@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"log"
 	"net/http"
 	"path"
 	"text/template"
@@ -12,9 +13,11 @@ func Template(name string) string {
 	return path.Join(config.CONFIG["templateDir"], name)
 }
 
-func RunTemplate(w http.ResponseWriter, templateName, baseTemplateName string, data interface{}) {
+func RunTemplate(w http.ResponseWriter, templateName, headerTemplateName, footerTemplateName string, data interface{}) {
 	tp := Template(templateName)
-	bstp := Template(baseTemplateName)
-	tmpl := template.Must(template.New(tp).ParseFiles(bstp, tp))
-	tmpl.ExecuteTemplate(w, "base", data)
+	bstp := Template(headerTemplateName)
+	fttp := Template(footerTemplateName)
+	tmpl := template.Must(template.ParseFiles(tp, bstp, fttp))
+	log.Println("Data in RunTemplate", data)
+	tmpl.Execute(w, data)
 }
