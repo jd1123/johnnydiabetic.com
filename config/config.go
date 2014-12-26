@@ -6,13 +6,17 @@ import (
 	"path/filepath"
 )
 
+// Various config used throughout the webapp
+// FIXME: Is it safe to store the keys in memory???
 var CONFIG = map[string]string{
-	"homeDir":     HomeDir(),
-	"templateDir": AddDir("templates"),
-	"staticDir":   AddDir("static"),
-	"db":          "",
-	"dbLogin":     "",
-	"dbPW":        "",
+	"homeDir":           HomeDir(),
+	"templateDir":       AddDir("templates"),
+	"staticDir":         AddDir("static"),
+	"db":                "",
+	"dbLogin":           "",
+	"dbPW":              "",
+	"authenticationKey": "", // base64 encoded string
+	"encryptionKey":     "", // base64 encoded string
 }
 
 func HomeDir() string {
