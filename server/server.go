@@ -5,9 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/jd1123/johnnydiabetic.com/blog"
+	"github.com/jd1123/johnnydiabetic.com/config"
 	"github.com/jd1123/johnnydiabetic.com/middleware"
 )
+
+var Store = sessions.NewCookieStore(config.AuthenticationKey(), config.EncryptionKey())
 
 func RegisterHandlers() {
 	// Build a new router

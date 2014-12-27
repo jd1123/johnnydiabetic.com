@@ -1,0 +1,12 @@
+{{ template "header" }}
+
+<div class="jumbotron">
+
+	<form action="/login/" method="POST">
+		<p class="reg-text"><label for="username">Username:</label> <input type="text" name="username"></p>
+		<p class="reg-text"><label for="password">Password:</label> <input type="password" name="password"></p>
+		<p><button type="submit" class="btn btn-primary">Login</button></p>
+
+</div>
+
+{{ template "footer" }}

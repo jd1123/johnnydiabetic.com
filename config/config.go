@@ -1,6 +1,9 @@
 package config
 
 import (
+	"encoding/base64"
+	"fmt"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -15,8 +18,8 @@ var CONFIG = map[string]string{
 	"db":                "",
 	"dbLogin":           "",
 	"dbPW":              "",
-	"authenticationKey": "", // base64 encoded string
-	"encryptionKey":     "", // base64 encoded string
+	"authenticationKey": "1b9H1muvPLWByNWvYSKg7RQ6eEqpeUoAZMomID/Emng=", // base64
+	"encryptionKey":     "gT3iJG5+WpTqgmmQnHB1XZfX3PTfWVe68l0iEhZCUg0=", // base64
 }
 
 func HomeDir() string {
@@ -30,4 +33,24 @@ func HomeDir() string {
 func AddDir(p string) string {
 	h := HomeDir()
 	return path.Join(h, p)
+}
+
+func AuthenticationKey() []byte {
+	fmt.Println(CONFIG["authenticationKey"])
+	key, err := base64.StdEncoding.DecodeString(CONFIG["authenticationKey"])
+	if err != nil {
+		log.Println("Encoding Error")
+		return nil
+	}
+	return key
+}
+
+func EncryptionKey() []byte {
+	fmt.Println(CONFIG["authenticationKey"])
+	key, err := base64.StdEncoding.DecodeString(CONFIG["authenticationKey"])
+	if err != nil {
+		log.Println("Encoding Error")
+		return nil
+	}
+	return key
 }

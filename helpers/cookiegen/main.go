@@ -13,7 +13,7 @@ import (
 // Output in a base64 encoded string
 func main() {
 	authenticationKey := make([]byte, 64)
-	encryptionKey := make([]byte, 64)
+	encryptionKey := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, authenticationKey); err != nil {
 		log.Println("Io error")
 		os.Exit(1)
