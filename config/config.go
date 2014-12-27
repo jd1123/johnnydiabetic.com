@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/base64"
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -36,7 +35,6 @@ func AddDir(p string) string {
 }
 
 func AuthenticationKey() []byte {
-	fmt.Println(CONFIG["authenticationKey"])
 	key, err := base64.StdEncoding.DecodeString(CONFIG["authenticationKey"])
 	if err != nil {
 		log.Println("Encoding Error")
@@ -46,7 +44,6 @@ func AuthenticationKey() []byte {
 }
 
 func EncryptionKey() []byte {
-	fmt.Println(CONFIG["authenticationKey"])
 	key, err := base64.StdEncoding.DecodeString(CONFIG["authenticationKey"])
 	if err != nil {
 		log.Println("Encoding Error")

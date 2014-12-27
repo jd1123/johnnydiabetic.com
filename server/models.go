@@ -4,7 +4,7 @@ import "golang.org/x/crypto/bcrypt"
 
 type User struct {
 	UserId   string
-	password []byte
+	Password []byte
 }
 
 func (u *User) SetPassword(pw string) {
@@ -12,5 +12,5 @@ func (u *User) SetPassword(pw string) {
 	if err != nil {
 		panic(err)
 	}
-	u.password = hpass
+	u.Password = hpass
 }

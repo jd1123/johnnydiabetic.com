@@ -8,5 +8,6 @@ var routes = map[string]HandlerFunction{
 	"/":           IndexHandler,
 	"/about/":     AboutHandler,
 	"/login/":     LoginHandler,
+	"/logout/":    LogoutHandler,
 	"/robots.txt": RobotsHandler,
 }

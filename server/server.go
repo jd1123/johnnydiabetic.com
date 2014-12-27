@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/gob"
 	"log"
 	"net/http"
 
@@ -11,9 +12,23 @@ import (
 	"github.com/jd1123/johnnydiabetic.com/middleware"
 )
 
-var Store = sessions.NewCookieStore(config.AuthenticationKey(), config.EncryptionKey())
+var S sessions.Store
+
+func init() {
+	S = sessions.NewCookieStore(config.AuthenticationKey(), config.EncryptionKey())
+	gob.Register(&User{})
+	/*
+		S.Options = &sessions.Options{
+			Domain:   "localhost",
+			Path:     "/",
+			MaxAge:   3600 * 8,
+			HttpOnly: true,
+		}
+	*/
+}
 
 func RegisterHandlers() {
+
 	// Build a new router
 	r := mux.NewRouter()
 
