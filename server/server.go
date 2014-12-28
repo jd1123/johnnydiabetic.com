@@ -9,14 +9,16 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/jd1123/johnnydiabetic.com/blog"
 	"github.com/jd1123/johnnydiabetic.com/config"
+	"github.com/jd1123/johnnydiabetic.com/helpers"
 	"github.com/jd1123/johnnydiabetic.com/middleware"
+	"github.com/justinas/nosurf"
 )
 
 var S sessions.Store
 
 func init() {
 	S = sessions.NewCookieStore(config.AuthenticationKey(), config.EncryptionKey())
-	gob.Register(&User{})
+	gob.Register(&helpers.Us{})
 	/*
 		S.Options = &sessions.Options{
 			Domain:   "localhost",
@@ -35,12 +37,12 @@ func RegisterHandlers() {
 	// This is the root app
 	for k, v := range routes {
 		r.HandleFunc(k, v)
-		http.Handle(k, middleware.LogRequest(r))
+		http.Handle(k, nosurf.New(middleware.LogRequest(r)))
 		log.Println("registering", k)
 	}
 
 	// Register Apps here
-	blog.RegisterHandlers(r)
+	blog.RegisterHandlers(r, S)
 
 	// 404 Handler
 	r.NotFoundHandler = http.HandlerFunc(notFound)

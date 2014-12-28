@@ -7,9 +7,13 @@ import (
 	"sort"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/jd1123/johnnydiabetic.com/middleware"
+	"github.com/justinas/nosurf"
 	"gopkg.in/mgo.v2"
 )
+
+var S sessions.Store
 
 // App logic, stuff that doesnt fit into the framework files
 func AddPost(b BlogPost) error {
@@ -44,11 +48,14 @@ func GetAllPosts() []BlogPost {
 	return results
 }
 
-func RegisterHandlers(r *mux.Router) {
+func RegisterHandlers(r *mux.Router, s sessions.Store) {
+	if s != nil {
+		S = s
+	}
 	for k, v := range routes {
 		fullPath := path.Join(appPrefix, k) + "/"
 		log.Println("registering", fullPath)
 		r.HandleFunc(fullPath, v)
-		http.Handle(fullPath, middleware.LogRequest(r))
+		http.Handle(fullPath, nosurf.New(middleware.LogRequest(r)))
 	}
 }

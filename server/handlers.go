@@ -8,15 +8,18 @@ import (
 	"os"
 
 	"github.com/jd1123/johnnydiabetic.com/helpers"
+	"github.com/justinas/nosurf"
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	context := getContext()
+	context := helpers.GetContext(r, S)
+	context["token"] = nosurf.Token(r)
+	fmt.Println(context)
 	helpers.RunTemplateBase(w, "index.html", context)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	context := getContext()
+	context := helpers.GetContext(r, S)
 	helpers.RunTemplateBase(w, "about.html", context)
 }
 
@@ -25,10 +28,11 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	context := getContext()
+	context := helpers.GetContext(r, S)
+	context["token"] = nosurf.Token(r)
 	session, err := S.Get(r, "session-name")
 	if err != nil {
-		log.Println("Session error")
+		log.Println("Session error", err)
 	}
 	fmt.Println("SESSION VALUES", session.Values)
 	if r.Method == "POST" {
@@ -38,8 +42,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.Write([]byte("invalid username/password"))
 		} else {
+			fmt.Println(u.UserId)
 			session.Values["user_authenticated"] = true
+			session.Values["user_name"] = u.UserId
 			session.Values["user"] = u
+			fmt.Println(u)
 			fmt.Println("Session Values:", session.Values)
 			err = session.Save(r, w)
 			if err != nil {
@@ -66,6 +73,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if session.Values["user_authenticated"] != nil {
 		delete(session.Values, "user_authenticated")
+		delete(session.Values, "user_name")
 		delete(session.Values, "user")
 		session.Save(r, w)
 		w.Write([]byte("logged out"))
