@@ -2,7 +2,7 @@
 
 This is the source code for my personal website. Originally, I had a website written in Python with Django
 but I decided to rewrite the website in Go. It has been a learning experience and is a lot of fun.
-The only libraries used besides the Golang standard lib is gorilla mux (http://gorillatoolkit.com/pkg/mux) and 
+The only libraries used besides the Golang standard lib is gorilla mux and sessions (http://gorillatoolkit.com/), and 
 mgo (http://gopkg.in/mgo). On the frontend, it's Twitter Bootstrap and JQuery.
 
 ## Why rewrite this in Go?

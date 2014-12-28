@@ -11,19 +11,13 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := S.Get(r, "session-name")
-	session.Values["test"] = "saved!"
-	err := session.Save(r, w)
-	if err != nil {
-		fmt.Println("Session save errror:", err)
-	}
-	helpers.RunTemplate(w, "index.html", "header.html", "footer.html", nil)
+	context := getContext()
+	helpers.RunTemplateBase(w, "index.html", context)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := S.Get(r, "session-name")
-	fmt.Println(session.Values["foo"])
-	helpers.RunTemplate(w, "about.html", "header.html", "footer.html", nil)
+	context := getContext()
+	helpers.RunTemplateBase(w, "about.html", context)
 }
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +25,7 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	context := getContext()
 	session, err := S.Get(r, "session-name")
 	if err != nil {
 		log.Println("Session error")
@@ -40,7 +35,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		user := r.FormValue("username")
 		pw := r.FormValue("password")
 		u, err := login(user, pw)
-		fmt.Println(u)
 		if err != nil {
 			w.Write([]byte("invalid username/password"))
 		} else {
@@ -53,13 +47,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			w.Write([]byte("login successful"))
 		}
-		fmt.Println("trying to save session...")
 	} else if r.Method == "GET" {
-		if session.Values["user_authenticated"] == true {
+		if session.Values["user_authenticated"] != nil {
 			msg := "Welcome back"
 			w.Write([]byte(msg))
 		} else {
-			helpers.RunTemplate(w, "login.html", "header.html", "footer.html", nil)
+			helpers.RunTemplateBase(w, "login.html", context)
 		}
 	}
 }
@@ -85,7 +78,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 // Implement 404 logic here
 func notFound(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	helpers.RunTemplate(w, "404.html", "header.html", "footer.html", nil)
+	helpers.RunTemplateBase(w, "404.html", nil)
 }
 
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {

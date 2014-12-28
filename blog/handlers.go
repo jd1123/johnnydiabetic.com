@@ -13,5 +13,5 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	posts := GetAllPosts()
 	Os := S{Posts: posts}
-	helpers.RunTemplate(w, "blog/index.html", "header.html", "footer.html", Os)
+	helpers.RunTemplateBase(w, "blog/index.html", Os)
 }

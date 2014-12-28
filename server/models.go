@@ -1,8 +1,12 @@
 package server
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type User struct {
+	ID       bson.ObjectId `bson:"_id,omitempty"`
 	UserId   string
 	Password []byte
 }

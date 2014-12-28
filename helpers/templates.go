@@ -20,3 +20,11 @@ func RunTemplate(w http.ResponseWriter, templateName, headerTemplateName, footer
 	//	log.Println("RunTemplate() called on", tp, "with", bstp, "and", fttp, "with data", data)
 	tmpl.Execute(w, data)
 }
+
+func RunTemplateBase(w http.ResponseWriter, templateName string, data interface{}) {
+	base := Template("base.html")
+	content := Template(templateName)
+	t := template.New("base.html")
+	t = template.Must(t.ParseFiles(base, content))
+	t.Execute(w, data)
+}

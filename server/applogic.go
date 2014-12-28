@@ -26,3 +26,10 @@ func login(username, pw string) (*User, error) {
 	}
 	return &result, nil
 }
+
+func getContext() map[string]interface{} {
+	context := make(map[string]interface{})
+	// Pass in the request and
+	// get some stuff from it
+	return context
+}
