@@ -19,6 +19,8 @@ var CONFIG = map[string]string{
 	"dbPW":              "",
 	"authenticationKey": "1b9H1muvPLWByNWvYSKg7RQ6eEqpeUoAZMomID/Emng=", // base64
 	"encryptionKey":     "gT3iJG5+WpTqgmmQnHB1XZfX3PTfWVe68l0iEhZCUg0=", // base64
+	"usersCollection":   "users",
+	"blogCollection":    "blogPosts",
 }
 
 func HomeDir() string {

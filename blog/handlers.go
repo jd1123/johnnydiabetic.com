@@ -10,13 +10,11 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	type mySt struct {
-		Posts  []BlogPost
-		String string
-	}
+	context := helpers.GetContext(r, S)
 	posts := GetAllPosts()
-	Os := mySt{Posts: posts}
-	helpers.RunTemplateBase(w, "blog/index.html", Os)
+	fmt.Println(posts)
+	context["Posts"] = posts
+	helpers.RunTemplateBase(w, "blog/index.html", context)
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +29,9 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	if session.Values["user_authenticated"] != nil {
 		// user is logged in
 		if r.Method == "POST" {
-			// post it!
+			b := NewBlogPost(r.FormValue("title"), r.FormValue("body"))
+			AddPost(b)
+			w.Write([]byte("Post successful!"))
 		} else if r.Method == "GET" {
 			// show the post page
 			helpers.RunTemplateBase(w, "blog/post.html", context)
@@ -39,6 +39,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//user is not logged in
 		//redirect to login page
-		w.Write([]byte("You are not logged in and got to the post page"))
+		//w.Write([]byte("You are not logged in and got to the post page"))
+		http.Redirect(w, r, "/login/", 301)
 	}
 }

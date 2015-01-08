@@ -52,12 +52,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			w.Write([]byte("login successful"))
+			http.Redirect(w, r, "/", 301)
+			//w.Write([]byte("login successful"))
 		}
 	} else if r.Method == "GET" {
 		if session.Values["user_authenticated"] != nil {
-			msg := "Welcome back"
-			w.Write([]byte(msg))
+			//msg := "Welcome back"
+			http.Redirect(w, r, "/", 301)
 		} else {
 			helpers.RunTemplateBase(w, "login.html", context)
 		}

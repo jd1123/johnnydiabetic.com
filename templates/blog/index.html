@@ -3,10 +3,13 @@
 	<center>
 		<h2>Welcome to my blog</h2>
 	</center>
+	{{ if .User }}
+	<p><a href="/blog/post/">Post</a></p>
+	{{end}}
 	Posts:
 	<div class = "container">
 		{{range .Posts}}
-		{{.Title}} created at {{.DateCreated}}<br/>
+		<a href="">{{.Title}}</a> created at {{.DateCreated}}<br/>
 		{{.Content}}</br>
 		{{end}}
 	</div>

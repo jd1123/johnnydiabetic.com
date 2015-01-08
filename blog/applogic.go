@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/jd1123/johnnydiabetic.com/middleware"
 	"github.com/justinas/nosurf"
+	"github.com/russross/blackfriday"
 	"gopkg.in/mgo.v2"
 )
 
@@ -45,13 +46,18 @@ func GetAllPosts() []BlogPost {
 		return nil
 	}
 	sort.Sort(BlogPostCollection(results))
+	for i := range results {
+		PostMarkdown(&results[i])
+	}
 	return results
 }
 
+func PostMarkdown(b *BlogPost) {
+	b.Content = string(blackfriday.MarkdownBasic([]byte(b.Content)))
+}
+
 func RegisterHandlers(r *mux.Router, s sessions.Store) {
-	if s != nil {
-		S = s
-	}
+	S = s
 	for k, v := range routes {
 		fullPath := path.Join(appPrefix, k) + "/"
 		log.Println("registering", fullPath)
