@@ -16,7 +16,8 @@ type HandlerFunction func(w http.ResponseWriter, r *http.Request)
 var appPrefix = "/blog"
 
 var routes = map[string]HandlerFunction{
-	"/":      IndexHandler,
-	"/post/": PostHandler,
-	"/{key}": ViewPostHandler,
+	"/":           IndexHandler,
+	"/post/":      PostHandler,
+	"/view/{key}": ViewPostHandler,
+	"/edit/{key}": EditPostHandler,
 }

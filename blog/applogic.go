@@ -33,6 +33,10 @@ func AddPost(b BlogPost) error {
 	return nil
 }
 
+func EditPost(id int) error {
+	return nil
+}
+
 func GetPostById(id int) *BlogPost {
 	s, err := mgo.Dial("localhost")
 	if err != nil {
