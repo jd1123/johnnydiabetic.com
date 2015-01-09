@@ -12,6 +12,7 @@ import (
 	"github.com/justinas/nosurf"
 	"github.com/russross/blackfriday"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var S sessions.Store
@@ -30,6 +31,26 @@ func AddPost(b BlogPost) error {
 		return err
 	}
 	return nil
+}
+
+func GetPostById(id int) *BlogPost {
+	s, err := mgo.Dial("localhost")
+	if err != nil {
+		log.Println("Error:", err)
+		return nil
+	}
+	c := s.DB("test").C("blogposts")
+	var result []BlogPost
+	err = c.Find(bson.M{"id": id}).All(&result)
+	if err != nil {
+		log.Println("DB Error in GetPostById()", err)
+		return nil
+	}
+	if len(result) > 0 {
+		return &result[0]
+	} else {
+		return nil
+	}
 }
 
 func GetAllPosts() []BlogPost {

@@ -1,10 +1,11 @@
 package blog
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/jd1123/johnnydiabetic.com/helpers"
 	"github.com/justinas/nosurf"
 )
@@ -12,9 +13,32 @@ import (
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	context := helpers.GetContext(r, S)
 	posts := GetAllPosts()
-	fmt.Println(posts)
 	context["Posts"] = posts
 	helpers.RunTemplateBase(w, "blog/index.html", context)
+}
+
+func ViewPostHandler(w http.ResponseWriter, r *http.Request) {
+	context := helpers.GetContext(r, S)
+	//session
+	_, err := S.Get(r, "session-name")
+	if err != nil {
+		log.Println("Session error", err)
+	}
+	postId, err := strconv.Atoi(mux.Vars(r)["key"])
+	if err != nil {
+		w.Write([]byte("404!"))
+
+	} else {
+		// This sucks sooooo much. Do something less confusing.
+		post := GetPostById(postId)
+		if post != nil {
+			PostMarkdown(post)
+			context["Post"] = *post
+			helpers.RunTemplateBase(w, "blog/blogpost.html", context)
+		} else {
+			w.Write([]byte("404!"))
+		}
+	}
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +49,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Session error", err)
 		// redirect
 	}
-	fmt.Println(context, session)
 	if session.Values["user_authenticated"] != nil {
 		// user is logged in
 		if r.Method == "POST" {

@@ -12,6 +12,10 @@ type Us struct {
 	Permissions map[string]bool
 }
 
+var defaultPermissions = map[string]bool{
+	"post": false,
+}
+
 func (u *Us) SetPassword(pw string) {
 	hpass, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.DefaultCost)
 	if err != nil {

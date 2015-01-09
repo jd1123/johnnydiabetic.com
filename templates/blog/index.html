@@ -9,7 +9,7 @@
 	Posts:
 	<div class = "container">
 		{{range .Posts}}
-		<a href="">{{.Title}}</a> created at {{.DateCreated}}<br/>
+		<a href="/blog/{{.Id}}/">{{.Title}}</a> created at {{.DateCreated}}<br/>
 		{{.Content}}</br>
 		{{end}}
 	</div>
