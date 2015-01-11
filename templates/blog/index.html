@@ -1,4 +1,5 @@
 {{ define "body"}}
+<link rel="stylesheet" href="/static/css/blogindex.css">
 <div class="jumbotron">
 	<center>
 		<h2>Welcome to my blog</h2>
@@ -9,8 +10,10 @@
 	Posts:
 	<div class = "container">
 		{{range .Posts}}
-		<a href="/blog/{{.Id}}/">{{.Title}}</a> created at {{.DateCreated}}<br/>
+		<div class="blogindex">
+		<a href="/blog/view/{{.Id}}/">{{.Title}}</a> created at {{.CreatedString}}<br/>
 		{{.Content}}</br>
+	</div><br/>
 		{{end}}
 	</div>
 

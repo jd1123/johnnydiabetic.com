@@ -1,9 +1,6 @@
 package blog
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 func TestBlogPostObject(t *testing.T) {
 	//	b := NewBlogPost("This is a post", "Hello world!")
@@ -11,6 +8,5 @@ func TestBlogPostObject(t *testing.T) {
 }
 
 func TestGetBlogPostById(t *testing.T) {
-	b := GetPostById(1)
-	fmt.Println(b)
+	EditPost(1, "Hello this is updated", "updated")
 }

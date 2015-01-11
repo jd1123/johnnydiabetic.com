@@ -44,13 +44,24 @@ func ViewPostHandler(w http.ResponseWriter, r *http.Request) {
 func EditPostHandler(w http.ResponseWriter, r *http.Request) {
 	context := helpers.GetContext(r, S)
 	context["token"] = nosurf.Token(r)
+	context["Edit"] = true
 	session, err := S.Get(r, "session-name")
 	if err != nil {
 		log.Println("Session error in EditPostHandler()", err)
 	}
 	if session.Values["user_authenticated"] != nil { // User is authenticated
 		if r.Method == "POST" { // User is posting an edit
-			//post it
+			postId, err := strconv.Atoi(mux.Vars(r)["key"])
+			if err != nil {
+				w.Write([]byte("key error!"))
+			}
+			err = EditPost(postId, r.FormValue("title"), r.FormValue("body"))
+			if err != nil {
+				w.Write([]byte("Post error!"))
+
+			} else {
+				http.Redirect(w, r, "/blog/view/"+strconv.Itoa(postId)+"/", 301)
+			}
 		} else if r.Method == "GET" { // User is trying to edit a post
 			postId, err := strconv.Atoi(mux.Vars(r)["key"])
 			if err != nil {
@@ -58,6 +69,7 @@ func EditPostHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				post := GetPostById(postId)
 				context["Post"] = post
+				context["Key"] = postId
 				helpers.RunTemplateBase(w, "blog/post.html", context)
 			}
 		}

@@ -33,8 +33,32 @@ func AddPost(b BlogPost) error {
 	return nil
 }
 
-func EditPost(id int) error {
+func EditPost(id int, newTitle, newContent string) error {
+	s, c, err := ConnectDB("blogposts")
+	if err != nil {
+		log.Println("DB connection err", err)
+		return err
+	}
+	var result BlogPost
+	c.Find(bson.M{"id": id}).One(&result)
+	newPost := BlogPost{Id: result.Id, Title: newTitle, Content: newContent}
+	err = c.Update(result, newPost)
+	if err != nil {
+		log.Println("Update error:", err)
+		return err
+	}
+	s.Close()
 	return nil
+}
+
+func ConnectDB(collection string) (*mgo.Session, *mgo.Collection, error) {
+	s, err := mgo.Dial("localhost")
+	if err != nil {
+		log.Println("DB connection error", err)
+		return nil, nil, err
+	}
+	c := s.DB("test").C("blogposts")
+	return s, c, nil
 }
 
 func GetPostById(id int) *BlogPost {
@@ -43,6 +67,7 @@ func GetPostById(id int) *BlogPost {
 		log.Println("Error:", err)
 		return nil
 	}
+	defer s.Close()
 	c := s.DB("test").C("blogposts")
 	var result []BlogPost
 	err = c.Find(bson.M{"id": id}).All(&result)
@@ -63,6 +88,7 @@ func GetAllPosts() []BlogPost {
 		log.Println("Error:", err)
 		return nil
 	}
+	defer s.Close()
 	c := s.DB("test").C("blogposts")
 	var results []BlogPost
 	err = c.Find(nil).All(&results)

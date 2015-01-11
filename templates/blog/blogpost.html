@@ -1,7 +1,22 @@
 {{ define "body" }}
+<link rel="stylesheet" href="/static/css/blog.css">
 <div class="container">
-	<p class="reg-text">{{.Post.Title}}</p>
+<div class="blog-header">
+	<h1 class="blog-post-title">{{.Post.Title}}</h1>
+</div>
+<div class="row">
+	<div class="col-sm-8 blog-main">
+		<p class="blog-post-meta">{{.Post.CreatedString}}</p>
 	<br />
 	{{.Post.Content}}
-</div>
+</div> <!-- col-sm-8 -->
+
+<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+	<div class="sidebar-module sidebar-module-inset">
+		This is one of my blog posts. Please click <a href="/blog/">here</a> to see the index.
+	</div> <!-- sidebar module -->
+</div> <!-- col sm 3 -->
+
+</div> <!-- row -->
+</div> <!-- container -->
 {{ end }}

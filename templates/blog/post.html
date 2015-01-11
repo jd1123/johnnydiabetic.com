@@ -3,13 +3,17 @@
 <div class="jumbotron">
 	<p><h3>Create a blog post</h3></p>
 	<p class="reg-text">Please enter your post in markdown</p>
+	{{ if .Edit }}
+	<form action="/blog/edit/{{.Post.Id}}/" method="POST">		
+	{{ else }}
 	<form action="/blog/post/" method="POST">
+	{{ end }}
 		<p class="reg-text"><label for="title">Title:</label><br/><input type="text" name="title"
 		{{ if .Post }}
 			value="{{.Post.Title}}"
 		{{ end }}
 		></p>
-		<p><label for="body">Body:</label><textarea class="form-control" rows="12" name="body">{{.Post.Content}}</textarea></p>
+		<p><label for="body">Body:</label><textarea class="form-control" rows="12" name="body">{{if .Edit}}{{.Post.Content}}{{end}}</textarea></p>
 		<input type="hidden" name="csrf_token" value="{{.token}}">
 		<p><button class="btn btn-primary">Post</button></p>
 	</form>	

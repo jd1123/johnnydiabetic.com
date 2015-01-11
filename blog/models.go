@@ -7,10 +7,11 @@ import (
 
 // Objects
 type BlogPost struct {
-	DateCreated time.Time
-	Title       string
-	Content     string
-	Id          int
+	DateCreated   time.Time
+	Title         string
+	Content       string
+	Id            int
+	CreatedString string
 }
 
 func NewBlogPost(title, content string) BlogPost {
@@ -20,14 +21,19 @@ func NewBlogPost(title, content string) BlogPost {
 	// There is probably an easier way to do this:
 	// check if collection.Count()==0 and if so make
 	// id = 1 else check the id
-	g := func(title, content string) {
+	g := func(b BlogPost) {
 		if r := recover(); r != nil {
-			fmt.Println(title)
 		}
 	}
-	defer g(title, content)
-	id := GetAllPosts()[0].Id + 1
-	return BlogPost{DateCreated: time.Now(), Title: title, Content: content, Id: id}
+	var b BlogPost = BlogPost{}
+	b.Title = title
+	b.Content = content
+	b.DateCreated = time.Now()
+	b.CreatedString = time.Now().Format("Jan 2, 2006 at 3:04pm")
+	defer g(b)
+	b.Id = GetAllPosts()[0].Id + 1
+	return b
+	//return BlogPost{DateCreated: time.Now(), Title: title, Content: content, Id: id, CreatedString: createdString}
 }
 
 func (b BlogPost) Print() {
