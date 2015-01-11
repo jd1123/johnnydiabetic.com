@@ -12,14 +12,13 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	context["token"] = nosurf.Token(r)
-	fmt.Println(context)
 	helpers.RunTemplateBase(w, "index.html", context)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	helpers.RunTemplateBase(w, "about.html", context)
 }
 
@@ -28,7 +27,7 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	context["token"] = nosurf.Token(r)
 	session, err := S.Get(r, "session-name")
 	if err != nil {
@@ -42,17 +41,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.Write([]byte("invalid username/password"))
 		} else {
-			fmt.Println(u.UserId)
 			session.Values["user_authenticated"] = true
 			session.Values["user_name"] = u.UserId
 			session.Values["user"] = u
-			fmt.Println(u)
-			fmt.Println("Session Values:", session.Values)
 			err = session.Save(r, w)
 			if err != nil {
-				fmt.Println(err)
+				log.Println("Session Error in LoginHandler()", err)
 			}
-			http.Redirect(w, r, "/", 301)
+			redir := "/"
+			if session.Values["last3"] != nil {
+				redir = session.Values["last3"].(string)
+			}
+			http.Redirect(w, r, redir, 301)
 			//w.Write([]byte("login successful"))
 		}
 	} else if r.Method == "GET" {
@@ -77,7 +77,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		delete(session.Values, "user_name")
 		delete(session.Values, "user")
 		session.Save(r, w)
-		w.Write([]byte("logged out"))
+		http.Redirect(w, r, "/", 301)
 	} else {
 		w.Write([]byte("Not logged in"))
 	}
@@ -93,15 +93,15 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 func RobotsHandler(w http.ResponseWriter, r *http.Request) {
 	f, err := os.Open("static/robots.txt")
 	if err != nil {
-		log.Printf("IO Error")
-		w.Write([]byte("IO Error!"))
+		log.Printf("IO Error in RobotsHandler()")
+		http.NotFound(w, r)
 	} else {
-		r, err := ioutil.ReadAll(f)
+		fileContents, err := ioutil.ReadAll(f)
 		if err != nil {
-			log.Printf("IO Error")
-			w.Write([]byte("IO Error!"))
+			log.Printf("IO Error in RobotsHandler()")
+			http.NotFound(w, r)
 		} else {
-			w.Write(r)
+			w.Write(fileContents)
 		}
 	}
 }

@@ -2,6 +2,7 @@ package blog
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/kennygrant/sanitize"
@@ -30,7 +31,6 @@ func NewBlogPost(title, content string) BlogPost {
 		b.Id = allPosts[0].Id + 1
 	}
 	return b
-	//return BlogPost{DateCreated: time.Now(), Title: title, Content: content, Id: id, CreatedString: createdString}
 }
 
 func (b BlogPost) Print() {
@@ -46,6 +46,17 @@ func (b *BlogPost) Markdown() {
 func (b *BlogPost) Sanitize() {
 	b.Markdown()
 	b.Content = sanitize.HTML(b.Content)
+}
+
+func (b *BlogPost) Slugify() {
+	// FIXME: This is okay, but not great -
+	// does not leave spaces after newlines
+	// ... got to think about this
+	b.Sanitize()
+	s := strings.Split(b.Content, " ")
+	if len(s) > 20 {
+		b.Content = strings.Join(s[0:19], " ")
+	}
 }
 
 type BlogPostCollection []BlogPost

@@ -14,13 +14,14 @@ var CONFIG = map[string]string{
 	"homeDir":           HomeDir(),
 	"templateDir":       AddDir("templates"),
 	"staticDir":         AddDir("static"),
-	"db":                "",
+	"dbAddress":         "localhost",
 	"dbLogin":           "",
 	"dbPW":              "",
 	"authenticationKey": "1b9H1muvPLWByNWvYSKg7RQ6eEqpeUoAZMomID/Emng=", // base64
 	"encryptionKey":     "gT3iJG5+WpTqgmmQnHB1XZfX3PTfWVe68l0iEhZCUg0=", // base64
+	"dbName":            "test",
 	"usersCollection":   "users",
-	"blogCollection":    "blogPosts",
+	"blogCollection":    "blogposts",
 }
 
 func HomeDir() string {

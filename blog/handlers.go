@@ -11,14 +11,17 @@ import (
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	posts := GetAllPosts()
+	for i := range posts {
+		posts[i].Slugify()
+	}
 	context["Posts"] = posts
 	helpers.RunTemplateBase(w, "blog/index.html", context)
 }
 
 func ViewPostHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	//session
 	_, err := S.Get(r, "session-name")
 	if err != nil {
@@ -26,23 +29,22 @@ func ViewPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	postId, err := strconv.Atoi(mux.Vars(r)["key"])
 	if err != nil {
-		w.Write([]byte("404!"))
-
+		http.NotFound(w, r)
 	} else {
 		// This sucks sooooo much. Do something less confusing.
 		post := GetPostById(postId)
 		if post != nil {
-			PostMarkdown(post)
+			post.Markdown()
 			context["Post"] = *post
 			helpers.RunTemplateBase(w, "blog/blogpost.html", context)
 		} else {
-			w.Write([]byte("404!"))
+			http.NotFound(w, r)
 		}
 	}
 }
 
 func EditPostHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	context["token"] = nosurf.Token(r)
 	context["Edit"] = true
 	session, err := S.Get(r, "session-name")
@@ -79,7 +81,7 @@ func EditPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
-	context := helpers.GetContext(r, S)
+	context := helpers.GetContext(w, r, S)
 	context["token"] = nosurf.Token(r)
 	session, err := S.Get(r, "session-name")
 	if err != nil {

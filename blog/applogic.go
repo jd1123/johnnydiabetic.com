@@ -11,7 +11,6 @@ import (
 	"github.com/jd1123/johnnydiabetic.com/config"
 	"github.com/jd1123/johnnydiabetic.com/middleware"
 	"github.com/justinas/nosurf"
-	"github.com/russross/blackfriday"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -100,14 +99,7 @@ func GetAllPosts() []BlogPost {
 		return nil
 	}
 	sort.Sort(BlogPostCollection(results))
-	for i := range results {
-		PostMarkdown(&results[i])
-	}
 	return results
-}
-
-func PostMarkdown(b *BlogPost) {
-	b.Content = string(blackfriday.MarkdownBasic([]byte(b.Content)))
 }
 
 func RegisterHandlers(r *mux.Router, s sessions.Store) {
