@@ -1,6 +1,11 @@
 package blog
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+
+	"github.com/kennygrant/sanitize"
+)
 
 func TestBlogPostObject(t *testing.T) {
 	//	b := NewBlogPost("This is a post", "Hello world!")
@@ -8,5 +13,11 @@ func TestBlogPostObject(t *testing.T) {
 }
 
 func TestGetBlogPostById(t *testing.T) {
-	EditPost(1, "Hello this is updated", "updated")
+}
+
+func TestSanitize(t *testing.T) {
+	htmlString := "<html><head></head><body>This is html<p>This is a new Paragraph</p></body></html>"
+	plainString := sanitize.HTML(htmlString)
+	fmt.Println("HTML:", htmlString)
+	fmt.Println("Sanitized:", plainString)
 }

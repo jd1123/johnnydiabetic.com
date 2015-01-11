@@ -3,6 +3,9 @@ package blog
 import (
 	"fmt"
 	"time"
+
+	"github.com/kennygrant/sanitize"
+	"github.com/russross/blackfriday"
 )
 
 // Objects
@@ -15,23 +18,17 @@ type BlogPost struct {
 }
 
 func NewBlogPost(title, content string) BlogPost {
-	// This is trying to recover from a runtime panic of
-	// being out of bounds if no posts exist. I have not
-	// figured out how to return something if it panics.
-	// There is probably an easier way to do this:
-	// check if collection.Count()==0 and if so make
-	// id = 1 else check the id
-	g := func(b BlogPost) {
-		if r := recover(); r != nil {
-		}
-	}
 	var b BlogPost = BlogPost{}
 	b.Title = title
 	b.Content = content
 	b.DateCreated = time.Now()
 	b.CreatedString = time.Now().Format("Jan 2, 2006 at 3:04pm")
-	defer g(b)
-	b.Id = GetAllPosts()[0].Id + 1
+	allPosts := GetAllPosts()
+	if len(allPosts) == 0 {
+		b.Id = 0
+	} else {
+		b.Id = allPosts[0].Id + 1
+	}
 	return b
 	//return BlogPost{DateCreated: time.Now(), Title: title, Content: content, Id: id, CreatedString: createdString}
 }
@@ -40,6 +37,15 @@ func (b BlogPost) Print() {
 	fmt.Println("Created at:", b.DateCreated)
 	fmt.Println("Title:", b.Title)
 	fmt.Println("Content:", b.Content)
+}
+
+func (b *BlogPost) Markdown() {
+	b.Content = string(blackfriday.MarkdownBasic([]byte(b.Content)))
+}
+
+func (b *BlogPost) Sanitize() {
+	b.Markdown()
+	b.Content = sanitize.HTML(b.Content)
 }
 
 type BlogPostCollection []BlogPost
