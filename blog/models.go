@@ -54,9 +54,10 @@ func (b *BlogPost) Slugify() {
 	// ... got to think about this
 	b.Sanitize()
 	s := strings.Split(b.Content, " ")
-	if len(s) > 20 {
-		b.Content = strings.Join(s[0:19], " ")
+	if len(s) > 40 {
+		b.Content = strings.Join(s[0:39], " ")
 	}
+	b.Content = strings.TrimSpace(b.Content) + "..."
 }
 
 type BlogPostCollection []BlogPost
